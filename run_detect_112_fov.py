@@ -53,7 +53,7 @@ def start_AP(args):
   sa_oriRad = sa_repRad + 2;
   sa_ors = sa_oriRad * sa_oriRad;
   
-  sa_fov = np.deg2rad(270 / 2);
+  sa_fov = np.deg2rad(360 / 2);
   
   sa_fErrRatio = 0.1;
   sa_tErrRatio = 0.1;
@@ -131,23 +131,26 @@ def start_AP(args):
   		in_ar = (dist_i >= np.ones((total_agent-1,1)) * sa_ors) * (dist_i <= np.ones((total_agent-1,1)) * sa_ars);
   		in_or = (dist_i >= np.ones((total_agent-1,1)) * sa_rrs) * (dist_i <= np.ones((total_agent-1,1)) * sa_ors);
   		in_fov = aad < np.ones((total_agent-1,1)) * sa_fov
+  		in_rr = in_rr * in_fov;
+  		in_ar = in_ar * in_fov;
+  		in_or = in_or * in_fov;
   		desired_dir = d_direction[i];
   		
   		if(t%1 == 0): # check if time step is 0.5 sec
   			if(in_rr.sum() > 0):
   				#compute desired direction with repulsion rule
-  				sum_vect = ((diff_xy / matmul(dist_i, np.ones((1,2)))) * in_rr * in_fov).sum(0);
+  				sum_vect = ((diff_xy / matmul(dist_i, np.ones((1,2)))) * in_rr).sum(0);
   				desired_dir = np.arctan2(sum_vect[1],sum_vect[0]);
   				if sa_number == 2:
 	  				print("detected",i,np.rad2deg(desired_dir));
-  			elif(in_ar.sum() > 0):
+  			else:
   				#compute desired direction with attraction rule
   				sum_vect_x = 0;
   				sum_vect_y = 0;
-  				sum_vect_att = -((diff_xy) * in_ar * in_fov).sum(0);
+  				sum_vect_att = -((diff_xy) * in_ar).sum(0);
   				sum_vect_att_mag = np.sqrt(sum_vect_att[0]*sum_vect_att[0]+sum_vect_att[1]*sum_vect_att[1]);
-  				sum_vect_ori_x = (np.cos(np.delete(direction,i,0)) * in_or * in_fov).sum(0);
-  				sum_vect_ori_y = (np.sin(np.delete(direction,i,0)) * in_or * in_fov).sum(0);
+  				sum_vect_ori_x = (np.cos(np.delete(direction,i,0)) * in_or).sum(0);
+  				sum_vect_ori_y = (np.sin(np.delete(direction,i,0)) * in_or).sum(0);
   				sum_vect_ori_mag = np.sqrt(sum_vect_ori_x*sum_vect_ori_x+sum_vect_ori_y*sum_vect_ori_y);
   				if(in_ar.sum() > 0):
   					sum_vect_x += sum_vect_att[0]/sum_vect_att_mag;
