@@ -50,6 +50,8 @@ def start_AP(args):
   sa_turnRate = np.deg2rad(45); #turn rate in deg/sec
   sa_repRad = sRad; #repulsion radius in unit
   sa_attRad = 30;
+  sa_oriRad = sa_repRad + 2;
+  sa_ors = sa_oriRad * sa_oriRad;
   
   sa_fov = np.deg2rad(270 / 2);
   
@@ -126,7 +128,8 @@ def start_AP(args):
 
   		#check if in range
   		in_rr = dist_i < np.ones((total_agent-1,1)) * sa_rrs;
-  		in_ar = (dist_i >= np.ones((total_agent-1,1)) * sa_rrs) * (dist_i <= np.ones((total_agent-1,1)) * sa_ars);
+  		in_ar = (dist_i >= np.ones((total_agent-1,1)) * sa_ors) * (dist_i <= np.ones((total_agent-1,1)) * sa_ars);
+  		in_or = (dist_i >= np.ones((total_agent-1,1)) * sa_rrs) * (dist_i <= np.ones((total_agent-1,1)) * sa_ors);
   		in_fov = aad < np.ones((total_agent-1,1)) * sa_fov
   		desired_dir = d_direction[i];
   		
@@ -139,8 +142,22 @@ def start_AP(args):
 	  				print("detected",i,np.rad2deg(desired_dir));
   			elif(in_ar.sum() > 0):
   				#compute desired direction with attraction rule
-  				sum_vect = -((diff_xy) * in_ar * in_fov).sum(0);
-  				desired_dir = np.arctan2(sum_vect[1],sum_vect[0]);
+  				sum_vect_x = 0;
+  				sum_vect_y = 0;
+  				sum_vect_att = -((diff_xy) * in_ar * in_fov).sum(0);
+  				sum_vect_att_mag = np.sqrt(sum_vect_att[0]*sum_vect_att[0]+sum_vect_att[1]*sum_vect_att[1]);
+  				sum_vect_ori_x = (np.cos(np.delete(direction,i,0)) * in_or * in_fov).sum(0);
+  				sum_vect_ori_y = (np.sin(np.delete(direction,i,0)) * in_or * in_fov).sum(0);
+  				sum_vect_ori_mag = np.sqrt(sum_vect_ori_x*sum_vect_ori_x+sum_vect_ori_y*sum_vect_ori_y);
+  				if(in_ar.sum() > 0):
+  					sum_vect_x += sum_vect_att[0]/sum_vect_att_mag;
+  					sum_vect_y += sum_vect_att[1]/sum_vect_att_mag;
+  				if(in_or.sum() > 0):
+  					sum_vect_x += sum_vect_ori_x/sum_vect_ori_mag;
+  					sum_vect_y += sum_vect_ori_y/sum_vect_ori_mag;
+  				desired_dir = np.arctan2(sum_vect_y,sum_vect_x);
+  				if sa_number == 2:
+	  				print(i,np.rad2deg(desired_dir));
   				if sa_number == 2:
 	  				print(i,np.rad2deg(desired_dir));
   		
@@ -158,8 +175,10 @@ def start_AP(args):
   			direction_tmp[i] = wraptopi(direction[i] + sa_tStep * turning_angle / np.abs(turning_angle) + np.random.normal(0,sa_tErrSd,1));
   				
   		#move
-  		position_tmp[i,0] = position[i,0] + np.cos(direction_tmp[i]) * sa_fStep;
-  		position_tmp[i,1] = position[i,1] + np.sin(direction_tmp[i]) * sa_fStep;
+  		
+  		total_step_length = sa_fStep + np.random.normal(0,sa_fErrSd,1)
+  		position_tmp[i,0] = position[i,0] + np.cos(direction_tmp[i]) * total_step_length;
+  		position_tmp[i,1] = position[i,1] + np.sin(direction_tmp[i]) * total_step_length;
   		
   		if sa_number == 2: 
   			print(np.rad2deg(direction[i]),position[i,:]);
@@ -217,8 +236,9 @@ def start_AP(args):
   		#print(t,desired_dir,)
   				
   		#move
-  		position_tmp[i,0] = position[i,0] + np.cos(direction_tmp[i]) * ca_fStep;
-  		position_tmp[i,1] = position[i,1] + np.sin(direction_tmp[i]) * ca_fStep;
+  		total_step_length = ca_fStep + np.random.normal(0,ca_fErrSd,1)
+  		position_tmp[i,0] = position[i,0] + np.cos(direction_tmp[i]) * total_step_length;
+  		position_tmp[i,1] = position[i,1] + np.sin(direction_tmp[i]) * total_step_length;
   		
 
   	
