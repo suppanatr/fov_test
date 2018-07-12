@@ -128,18 +128,20 @@ def start_AP(args):
   		in_rr = dist_i < np.ones((total_agent-1,1)) * sa_rrs;
   		in_ar = (dist_i >= np.ones((total_agent-1,1)) * sa_rrs) * (dist_i <= np.ones((total_agent-1,1)) * sa_ars);
   		in_fov = aad < np.ones((total_agent-1,1)) * sa_fov
+  		in_rr = in_rr * in_fov;
+  		in_ar = in_ar * in_fov;
   		desired_dir = d_direction[i];
   		
   		if(t%1 == 0): # check if time step is 0.5 sec
   			if(in_rr.sum() > 0):
   				#compute desired direction with repulsion rule
-  				sum_vect = ((diff_xy / matmul(dist_i, np.ones((1,2)))) * in_rr * in_fov).sum(0);
+  				sum_vect = ((diff_xy / matmul(dist_i, np.ones((1,2)))) * in_rr).sum(0);
   				desired_dir = np.arctan2(sum_vect[1],sum_vect[0]);
   				if sa_number == 2:
 	  				print("detected",i,np.rad2deg(desired_dir));
   			elif(in_ar.sum() > 0):
   				#compute desired direction with attraction rule
-  				sum_vect = -((diff_xy) * in_ar * in_fov).sum(0);
+  				sum_vect = -((diff_xy) * in_ar).sum(0);
   				desired_dir = np.arctan2(sum_vect[1],sum_vect[0]);
   				if sa_number == 2:
 	  				print(i,np.rad2deg(desired_dir));
@@ -246,7 +248,7 @@ def create_arg():
 	finaltime = [500]
 	sa_rad = 10+np.arange(-2,3,1);
 	#sa_rad = [5,6,7];
-	No = range(1,11)
+	No = range(1,2)
 	
 	a=[]
 	b=[]
