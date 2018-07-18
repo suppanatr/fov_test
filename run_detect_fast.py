@@ -129,7 +129,7 @@ def start_AP(args):
             #sense others' distance
             diff_xy = matmul(expand_matrix,position[i,:]) - position
             dist_i = (np.square(diff_xy[:,0]) + np.square(diff_xy[:,1])).reshape(total_agent,1)
-            dist_i[i,0] = 100
+            dist_i[i,0] = 10000
 
             aad = np.abs(wraptopi(np.arctan2(diff_xy[:,1],diff_xy[:,0]).reshape(total_agent,1) - direction))
 
@@ -210,7 +210,7 @@ def start_AP(args):
             #sense others' distance
             diff_xy = matmul(expand_matrix,position[i,:]) - position
             dist_i = (np.square(diff_xy[:,0]) + np.square(diff_xy[:,1])).reshape(total_agent,1)
-            dist_i[i,0] = 100
+            dist_i[i,0] = 10000
             #dist_i = np.delete(dist_i,i,0);
             #check if in range
             in_rr = dist_i < expand_matrix * ca_rrs;
