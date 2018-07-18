@@ -60,11 +60,12 @@ def grouping(X,Y):
 
 def grouping_prepare(arg):
     (sr,ar) = arg
-    fnameW = 'Fragment_' + str(sr) + '_' + str(sr + ar) + '.txt'
+    folder = ''
+    fnameW = folder + 'Fragment_' + str(sr) + '_' + str(sr + ar) + '.txt'
     fw = open(fnameW,"w")
     for n in range(1,501):
-        fnameX = 'sim1_time_500_' + str(sr) + '_' + str(ar + sr) + '_' + str(n) + '_X.txt';
-        fnameY = 'sim1_time_500_' + str(sr) + '_' + str(ar + sr) + '_' + str(n) + '_Y.txt';
+        fnameX = folder + 'sim1_time_500_' + str(sr) + '_' + str(ar + sr) + '_' + str(n) + '_X.txt';
+        fnameY = folder + 'sim1_time_500_' + str(sr) + '_' + str(ar + sr) + '_' + str(n) + '_Y.txt';
         tmpX = pd.read_csv(fnameX,sep=' ',header=None);
         tmpY = pd.read_csv(fnameY,sep=' ',header=None);
 
