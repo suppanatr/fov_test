@@ -19,8 +19,25 @@ def grouping(X,Y):
     label = 0
     group_size = []
     #group = [0] * 50
+    tmp = to_process_list.pop(50)
+    to_process_queue.append(tmp)
+    count = 0
+    while len(to_process_queue) > 0:
+        tmp = to_process_queue.pop(0)
+        #group[tmp] = label
+        count += 1
+        diff_x = X - X[tmp]
+        diff_y = Y - Y[tmp]
+        for other in to_process_list:
+            xc = diff_x[other]
+            yc = diff_y[other]
+            if (xc*xc + yc*yc) < 900:
+                to_process_queue.append(other)
+                to_process_list.remove(other)
+    group_size.append(count)
+    label += 1
     while len(to_process_list) > 0:
-        tmp = to_process_list.pop(50)
+        tmp = to_process_list.pop(0)
         to_process_queue.append(tmp)
         count = 0
         while len(to_process_queue) > 0:
@@ -35,8 +52,8 @@ def grouping(X,Y):
                 if (xc*xc + yc*yc) < 900:
                     to_process_queue.append(other)
                     to_process_list.remove(other)
-                    group_size.append(count)
-                    label += 1
+        group_size.append(count)
+        label += 1
     c_max = group_size[0]
     r_max = np.max(group_size)
     return (c_max,r_max)
@@ -78,5 +95,6 @@ if __name__ == "__main__":
     arg = generate_arg(SR,AR)
 
     pool = Pool(processes=1)
+    now = time.time()
     pool.map(grouping_prepare,arg)
     print(time.time() - now)
