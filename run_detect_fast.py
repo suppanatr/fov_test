@@ -129,26 +129,26 @@ def start_AP(args):
             #sense others' distance
             diff_xy = matmul(expand_matrix,position[i,:]) - position
             dist_i = (np.square(diff_xy[:,0]) + np.square(diff_xy[:,1])).reshape(total_agent,1)
-            dist_i[i,0] = 1
-            
+            dist_i[i,0] = 100
+
             aad = np.abs(wraptopi(np.arctan2(diff_xy[:,1],diff_xy[:,0]).reshape(total_agent,1) - direction))
 
             #check if in range
             in_rr = dist_i < (expand_matrix * sa_rrs);
-            
+
             in_or = dist_i <= (expand_matrix * sa_ors);
-            
+
             in_ar = (in_or != 1) * (dist_i <= (expand_matrix * sa_ars));
-            
+
             in_or = (in_rr != 1) * (in_or);
-            
+
             in_fov = aad < (expand_matrix * sa_fov)
             in_fov[i,0] = False
-            
+
             in_rr = in_rr * in_fov;
             in_ar = in_ar * in_fov;
             in_or = in_or * in_fov;
-            
+
             #print(i)
             desired_dir = d_direction[i];
 
@@ -210,7 +210,7 @@ def start_AP(args):
             #sense others' distance
             diff_xy = matmul(expand_matrix,position[i,:]) - position
             dist_i = (np.square(diff_xy[:,0]) + np.square(diff_xy[:,1])).reshape(total_agent,1)
-            dist_i[i,0] = 1
+            dist_i[i,0] = 100
             #dist_i = np.delete(dist_i,i,0);
             #check if in range
             in_rr = dist_i < expand_matrix * ca_rrs;
@@ -218,10 +218,10 @@ def start_AP(args):
             in_rr_125 = dist_i < expand_matrix * ca_rrs * 1.25;
             in_rr_175 = dist_i < expand_matrix * ca_rrs * 1.75;
             in_ar = (in_rr != 1) * (dist_i <= expand_matrix * ca_ars);
-            
+
             in_rr[i,0] = False
             in_ar[i,0] = False
-            
+
             encounter175 = in_rr_175.sum();
             encounter125 = in_rr_125.sum();
             encounter150 = in_rr_150.sum();
