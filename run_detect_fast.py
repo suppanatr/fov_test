@@ -87,7 +87,7 @@ def start_AP(args):
     ca_tErrSd = ca_tStep * ca_tErrRatio / 2;
 
     #initialise agents
-    position = (np.random.rand(total_agent,2) - 0.5) * np.sqrt(sa_number);
+    position = (np.random.rand(total_agent,2) - 0.5) * np.sqrt(sa_number) * sa_repRad;
     position_tmp = np.zeros((total_agent,2));
 
     direction = (np.random.rand(total_agent,1) * 2 * np.pi - np.pi);
