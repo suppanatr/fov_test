@@ -60,11 +60,11 @@ def grouping(X,Y):
     return (c_max,r_max)
 
 def grouping_prepare(arg):
-    (sarg,sr,ar) = arg
+    (sr,ar,sarg) = arg
     folder = ''
     fnameW = folder + 'Fragment_' + str(sarg) + '_' + str(sr) + '_' + str(sr + ar) + '.txt'
     fw = open(fnameW,"w")
-    for n in range(1,501):
+    for n in range(1,101):
         fnameX = folder + 'sim1_time_' + str(sarg) + '_' + str(sr) + '_' + str(ar + sr) + '_' + str(n) + '_X.txt';
         fnameY = folder + 'sim1_time_' + str(sarg) + '_' + str(sr) + '_' + str(ar + sr) + '_' + str(n) + '_Y.txt';
         tmpX = pd.read_csv(fnameX,sep=' ',header=None);
@@ -86,7 +86,7 @@ def grouping_prepare(arg):
         X = tmpX.iloc[4999,0:51].as_matrix()
         Y = tmpY.iloc[4999,0:51].as_matrix()
         (E,F) = grouping(X,Y)
-        print("%d %d %d %d %d %d %d" %(A,B,C,D,E,F,i), file=fw, end="\n" )
+        print("%d %d %d %d %d %d %d" %(A,B,C,D,E,F,n), file=fw, end="\n" )
     fw.close()
 
 def generate_arg(SR,AR,SARG):
@@ -104,7 +104,7 @@ def generate_arg(SR,AR,SARG):
 if __name__ == "__main__":
     SR = [8,9,10,11,12]
     AR = np.arange(-2,3,1)
-    SARG = [20,25,35]
+    SARG = [0.15,0.2,0.22,0.24,0.25,0.26,0.28,0.3]
     arg = generate_arg(SR,AR,SARG)
 
     pool = Pool(processes=8)
