@@ -27,14 +27,15 @@ process min NN-dist
 def start_process(args):
     #set file pointer
     (ft,sRad,cRad,No) = args;
+    folder = ''
     #fXname = './may/111_fov_270/res_' + str(ft) + '_' + str(sRad) + '_' + str(cRad) + '.txt';
-    fXname = '/Volumes/SSD_256/10agents/res_' + str(ft) + '_' + str(sRad) + '_' + str(cRad) + '.txt';
+    fXname = folder + 'res_' + str(ft) + '_' + str(sRad) + '_' + str(cRad) + '.txt';
     fWriteX = open(fXname,"w");
 
     acc = 0;
     for no in range(1,101):
         #fEname = './may/111_fov_270/sim1_time_' + str(ft) + '_' + str(sRad) + '_' + str(cRad) + '_' + str(no) +'_E.txt';
-        fEname = '/Volumes/SSD_256/10agents/sim1_time_' + str(ft) + '_' + str(sRad) + '_' + str(cRad) + '_' + str(no) +'_E.txt';
+        fEname = folder + 'sim1_time_' + str(ft) + '_' + str(sRad) + '_' + str(cRad) + '_' + str(no) +'_E.txt';
         fWriteE = open(fEname,"r");
         acc = 0
 
@@ -50,7 +51,7 @@ def start_process(args):
 
 
 def create_arg():
-    finaltime = [500]
+    finaltime = [20,25,35]
     sa_rad = [8,9,10,11,12];
     No = [1]
 
@@ -73,7 +74,7 @@ def create_arg():
 
 if __name__ == "__main__":
 
-    pool = Pool(processes=4)
+    pool = Pool(processes=8)
     arg = create_arg();
     now = time.time();
     pool.map( start_process, arg )
