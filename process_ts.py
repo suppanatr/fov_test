@@ -51,7 +51,7 @@ def start_process(args):
 
 
 def create_arg():
-    finaltime = [20,25,35]
+    finaltime = [0.15,0.2,0.22,0.24,0.25,0.26,0.28,0.3]
     sa_rad = [8,9,10,11,12];
     No = [1]
 
